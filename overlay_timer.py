@@ -50,10 +50,9 @@ class OverlayTimer:
         hours = int(elapsed // 3600)
         minutes = int((elapsed % 3600) // 60)
         seconds = int(elapsed % 60)
-        milliseconds = int((elapsed % 1) * 1000)  # Milliseconds precision
         
         self.label.config(text=f"{hours:02}:{minutes:02}:{seconds:02}")
-        self.root.after(10, self.update_timer)  # Update every 10ms
+        self.root.after(8, self.update_timer)  
 
     def toggle_pause(self, event):
         if self.running:
