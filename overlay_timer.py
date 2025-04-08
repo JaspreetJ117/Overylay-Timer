@@ -24,16 +24,21 @@ class OverlayTimer:
         
         self.lock_button = tk.Button(self.frame, text="🔒", font=("Courier", 12), bg='black', fg='red', borderwidth=0, command=self.toggle_lock)
         self.lock_button.pack(side=tk.RIGHT, padx=5)
+
+        self.reset_button = tk.Button(self.frame, text="R", font=("Courier", 12), bg='black', fg='white', borderwidth=0, command=self.reset_timer)
+        self.reset_button.pack(side=tk.RIGHT, padx=5)
         
         self.root.bind("<Button-1>", self.start_move)  # Start moving
         self.root.bind("<B1-Motion>", self.do_move)  # Moving motion
         self.root.bind("<ButtonRelease-1>", self.stop_move)  # Stop moving
         
+        self.root.bind("<Button-2>", self.reset_timer)  
+ 
         self.label.bind("<Double-Button-1>", self.toggle_pause)  # Double click to pause/resume
         self.label.bind("<Triple-Button-1>", self.close_timer)  # Triple click to close
         
         self.update_timer()
-        self.root.geometry("200x50+20+20")  # Small size, positioned at top-left
+        self.root.geometry("250x50+1+25")  # Small size, positioned at top-left
         self.root.mainloop()
 
     def update_timer(self):
@@ -42,11 +47,12 @@ class OverlayTimer:
         else:
             elapsed = self.pause_time
         
-        minutes = int(elapsed // 60)
+        hours = int(elapsed // 3600)
+        minutes = int((elapsed % 3600) // 60)
         seconds = int(elapsed % 60)
         milliseconds = int((elapsed % 1) * 1000)  # Milliseconds precision
         
-        self.label.config(text=f"{minutes:02}:{seconds:02}:{milliseconds:03}")
+        self.label.config(text=f"{hours:02}:{minutes:02}:{seconds:02}")
         self.root.after(10, self.update_timer)  # Update every 10ms
 
     def toggle_pause(self, event):
@@ -77,6 +83,10 @@ class OverlayTimer:
     
     def stop_move(self, event):
         pass
+    
+    def reset_timer(self):
+        self.start_time = time.time()  # Restart the timer
+        self.running = True
 
 if __name__ == "__main__":
     OverlayTimer()
